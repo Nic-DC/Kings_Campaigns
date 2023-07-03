@@ -13,8 +13,8 @@ const SearchTextField = styled(TextField)({
     color: "white",
   },
   "& .MuiOutlinedInput-root": {
-    backgroundColor: "#3f51b5",
-    height: "70%",
+    backgroundColor: "#525FA6",
+    height: "2.5rem",
     "& fieldset": {
       border: "none",
     },
@@ -35,12 +35,12 @@ const NavBar: React.FC = () => {
   };
 
   return (
-    <AppBar position="static">
-      <Toolbar sx={{ alignItems: "center" }}>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+    <AppBar position="static" sx={{ backgroundColor: "#3f51b5" }}>
+      <Toolbar sx={{ alignItems: "center", justifyContent: "space-between" }}>
+        <Typography variant="h6" component="div" sx={{ fontWeight: "bold" }}>
           Campaigns
         </Typography>
-        <Box sx={{ display: { xs: "none", md: "flex" }, alignSelf: "center" }}>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
           <SearchTextField
             variant="outlined"
             placeholder="Search"
@@ -61,14 +61,12 @@ const NavBar: React.FC = () => {
 
 export default NavBar;
 
-// import React from "react";
+// import React, { ChangeEvent } from "react";
+// import { useDispatch } from "react-redux";
 // import { AppBar, Toolbar, Typography, TextField, Box, InputAdornment } from "@mui/material";
 // import { styled } from "@mui/system";
 // import SearchIcon from "@mui/icons-material/Search";
-
-// interface NavBarProps {
-//   handleSearch: (searchText: string) => void;
-// }
+// import { updateFilters } from "../redux/campaigns/campaignsActions";
 
 // const SearchTextField = styled(TextField)({
 //   "& input": {
@@ -91,14 +89,17 @@ export default NavBar;
 //   },
 // });
 
-// const NavBar: React.FC<NavBarProps> = ({ handleSearch }) => {
-//   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-//     handleSearch(event.target.value);
+// const NavBar: React.FC = () => {
+//   const dispatch = useDispatch();
+
+//   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
+//     const { value } = event.target;
+//     dispatch(updateFilters({ name: value }));
 //   };
 
 //   return (
 //     <AppBar position="static">
-//       <Toolbar sx={{ alignItems: "center" }}>
+//       <Toolbar sx={{ alignItems: "center", displayFlex: "flex" }}>
 //         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
 //           Campaigns
 //         </Typography>
