@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import { DatePicker as MuiDatePicker, LocalizationProvider } from "@mui/lab";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import { TextField, TextFieldProps } from "@mui/material";
+import { MobileDatePicker } from "@mui/x-date-pickers";
 
 interface DatePickerProps {
   label: string;
@@ -17,14 +15,17 @@ const DatePicker: React.FC<DatePickerProps> = ({ label, onChange }) => {
   };
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <MuiDatePicker
-        label={label}
-        value={selectedDate}
-        onChange={handleDateChange}
-        renderInput={(params: TextFieldProps) => <TextField {...params} />}
-      />
-    </LocalizationProvider>
+    <MobileDatePicker
+      sx={{
+        ".MuiInputBase-root": {
+          border: "none",
+          marginRight: "0.25rem",
+        },
+      }}
+      label={label}
+      value={selectedDate}
+      onChange={handleDateChange}
+    />
   );
 };
 
