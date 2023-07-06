@@ -1,12 +1,10 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css";
 import App from "./App";
 import Campaign from "./types";
-
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { addCampaignsRef } from "./context/CampaignContext";
+import { campaignsRef } from "./context/CampaignContext";
 
 declare global {
   interface Window {
@@ -30,6 +28,11 @@ window.AddCampaigns = function (newCampaigns: Campaign[]) {
       console.error(
         `Campaign ${campaign.name} has an end date earlier than the start date. This campaign will not be added.`
       );
+      return false;
+    }
+
+    if (campaignsRef.current.some((existingCampaign) => existingCampaign.id === campaign.id)) {
+      console.error(`Campaign with id ${campaign.id} already exists. This campaign will not be added.`);
       return false;
     }
 

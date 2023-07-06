@@ -11,12 +11,18 @@ export const CampaignContext = createContext<CampaignContextProps>({
   addCampaigns: () => {},
 });
 
+export const campaignsRef = { current: [] as Campaign[] };
+
 export const addCampaignsRef = { current: (newCampaigns: Campaign[]) => {} };
 export const CampaignProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
 
   const addCampaigns = (newCampaigns: Campaign[]) => {
-    setCampaigns((prevCampaigns) => [...prevCampaigns, ...newCampaigns]);
+    setCampaigns((prevCampaigns) => {
+      const updatedCampaigns = [...prevCampaigns, ...newCampaigns];
+      campaignsRef.current = updatedCampaigns;
+      return updatedCampaigns;
+    });
   };
 
   addCampaignsRef.current = addCampaigns;
