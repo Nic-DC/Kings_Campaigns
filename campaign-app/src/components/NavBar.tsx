@@ -18,7 +18,7 @@ const SearchTextField = styled(TextField)({
     },
   },
   width: 200,
-  transition: "width 0.35s ease-in-out", // Smooth transition effect
+  transition: "width 0.35s ease-in-out",
   "&:focus-within": {
     width: 300,
   },
@@ -26,9 +26,10 @@ const SearchTextField = styled(TextField)({
 
 interface NavBarProps {
   onSearch: (value: string) => void;
+  searchValue: string;
 }
 
-const NavBar: React.FC<NavBarProps> = ({ onSearch }) => {
+const NavBar: React.FC<NavBarProps> = ({ onSearch, searchValue }) => {
   const handleSearchInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     onSearch(value);
@@ -44,6 +45,7 @@ const NavBar: React.FC<NavBarProps> = ({ onSearch }) => {
           <SearchTextField
             variant="outlined"
             placeholder="Search"
+            value={searchValue}
             onChange={handleSearchInputChange}
             InputProps={{
               startAdornment: (

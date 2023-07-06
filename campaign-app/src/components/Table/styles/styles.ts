@@ -17,8 +17,4 @@ export const StyledRightArrow = styled(IconButton)({
   marginRight: "1rem",
 });
 
-export const StyledFilterButton = styled(IconButton)({
-  // color: "#3f3f3f",
-  // marginLeft: "1rem",
-  // marginRight: "1rem",
-});
+export const StyledButton = styled(IconButton)({});

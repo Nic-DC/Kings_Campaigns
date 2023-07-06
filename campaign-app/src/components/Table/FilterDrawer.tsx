@@ -11,9 +11,11 @@ type Anchor = "right";
 interface FilterDrawerProps {
   open: boolean;
   onClose: () => void;
+  onStartDateChange: (date: Date | null) => void;
+  onEndDateChange: (date: Date | null) => void;
 }
 
-const FilterDrawer: React.FC<FilterDrawerProps> = ({ open, onClose }) => {
+const FilterDrawer: React.FC<FilterDrawerProps> = ({ open, onClose, onStartDateChange, onEndDateChange }) => {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
 
@@ -24,16 +26,18 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({ open, onClose }) => {
 
   const handleStartDateChange = (date: Date | null) => {
     setStartDate(date);
+    onStartDateChange(date);
   };
 
   const handleEndDateChange = (date: Date | null) => {
     setEndDate(date);
+    onEndDateChange(date);
   };
 
   const list = (anchor: Anchor) => (
     <Box sx={{ width: 350 }} role="presentation">
       <Box sx={{ display: "flex", alignItems: "center", marginTop: "1.5rem" }}>
-        <StyledRightArrow>
+        <StyledRightArrow onClick={onClose}>
           <KeyboardArrowRightIcon />{" "}
         </StyledRightArrow>
         <ListItemText primary={arrowText} />

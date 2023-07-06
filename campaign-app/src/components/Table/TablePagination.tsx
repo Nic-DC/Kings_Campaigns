@@ -8,8 +8,6 @@ interface TablePaginationDemoProps {
   handleChangeRowsPerPage: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   totalPages: number;
   count: number;
-  //   totalPagesSelected: number;
-  //   countSelected: number;
 }
 
 const TablePaginationDemo: React.FC<TablePaginationDemoProps> = ({
@@ -25,9 +23,9 @@ const TablePaginationDemo: React.FC<TablePaginationDemoProps> = ({
       component="div"
       count={count}
       page={currentPage}
-      onPageChange={handleChangePage} // Update the prop name to 'onChange'
+      onPageChange={handleChangePage}
       rowsPerPage={rowsPerPage}
-      onRowsPerPageChange={handleChangeRowsPerPage} // Update the prop name to 'onRowsPerPageChange'
+      onRowsPerPageChange={handleChangeRowsPerPage}
     />
   );
 };

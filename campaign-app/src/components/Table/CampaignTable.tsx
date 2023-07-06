@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import { selectFilteredCampaigns } from "../../redux/campaigns/selectors";
 import CampaignRow from "./CampaignRow";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -17,17 +15,39 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import TablePaginationDemo from "./TablePagination";
 import campaigns from "../../data/campaigns";
 import FilterDrawer from "./FilterDrawer";
-import { StyledFilterButton } from "./styles/styles";
+import { StyledButton } from "./styles/styles";
+import Tooltip from "@mui/material/Tooltip";
+import ResetFilterDemo from "./ResetFilter";
+import { CampaignContext } from "../../context/CampaignContext";
+import { useContext } from "react";
 
 interface CampaignTableProps {
   searchValue: string;
+  startDate: Date | null;
+  endDate: Date | null;
+  onStartDateChange: (date: Date | null) => void; // new
+  onEndDateChange: (date: Date | null) => void; // new
+  onSearchValueChange: (value: string) => void;
+  onClearFilters: (value: string) => void;
 }
 
-const CampaignTable: React.FC<CampaignTableProps> = ({ searchValue }) => {
+const CampaignTable: React.FC<CampaignTableProps> = ({
+  searchValue,
+  startDate,
+  endDate,
+  onStartDateChange,
+  onEndDateChange,
+  onSearchValueChange,
+  onClearFilters,
+}) => {
   const [rows, setRows] = useState<Campaign[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
+  const [resetFilterOpen, setResetFilterOpen] = useState(false);
+  const [filters, setFilters] = useState({ searchValue: "", startDate: null, endDate: null });
+
+  const { campaigns, addCampaigns } = useContext(CampaignContext);
 
   const addRows = (newRows: Campaign[]) => {
     setRows((prevRows) => [...prevRows, ...newRows]);
@@ -46,15 +66,29 @@ const CampaignTable: React.FC<CampaignTableProps> = ({ searchValue }) => {
     setFilterDrawerOpen(true);
   };
 
-  // Filter campaigns based on search value
-  const filteredCampaigns = campaigns.filter((campaign) =>
-    campaign.name.toLowerCase().includes(searchValue.toLowerCase())
-  );
+  const filteredCampaigns = campaigns.filter((campaign) => {
+    const isNameMatched = campaign.name.toLowerCase().includes(searchValue.toLowerCase());
+    const campaignStartDate = new Date(campaign.startDate);
+    const campaignEndDate = new Date(campaign.endDate);
+    const isDateInRange = (!startDate || campaignStartDate >= startDate) && (!endDate || campaignEndDate <= endDate);
+    return isNameMatched && isDateInRange;
+  });
 
   const paginatedCampaigns = filteredCampaigns.slice(currentPage * rowsPerPage, (currentPage + 1) * rowsPerPage);
 
   const handleFilterDrawerClose = () => {
     setFilterDrawerOpen(false);
+  };
+
+  const handleMoreVertIconClick = () => {
+    setResetFilterOpen(true);
+  };
+
+  const handleResetFilters = () => {
+    onSearchValueChange(""); // assumes you have a callback for changing searchValue
+    onStartDateChange(null);
+    onEndDateChange(null);
+    setResetFilterOpen(false);
   };
 
   return (
@@ -64,15 +98,22 @@ const CampaignTable: React.FC<CampaignTableProps> = ({ searchValue }) => {
           <TableHead style={{ color: alpha("#000", 0.3), fontSize: "150%" }}>
             <TableRow>
               <TableCell>
-                <StyledFilterButton onClick={handleFilterClick}>
-                  <FilterListIcon />
-                </StyledFilterButton>
+                <Tooltip title="Filter Results">
+                  <StyledButton onClick={handleFilterClick}>
+                    <FilterListIcon />
+                  </StyledButton>
+                </Tooltip>
               </TableCell>
               <TableCell></TableCell>
               <TableCell></TableCell>
               <TableCell></TableCell>
               <TableCell align="right">
-                <MoreVertIcon />
+                <Tooltip title="Filter Menu">
+                  <StyledButton onClick={handleMoreVertIconClick}>
+                    <MoreVertIcon />
+                  </StyledButton>
+                </Tooltip>
+                <ResetFilterDemo open={resetFilterOpen} onClearFilters={handleResetFilters} />
               </TableCell>
             </TableRow>
           </TableHead>
@@ -106,7 +147,12 @@ const CampaignTable: React.FC<CampaignTableProps> = ({ searchValue }) => {
         totalPages={Math.ceil(filteredCampaigns.length / rowsPerPage)}
         count={filteredCampaigns.length}
       />
-      <FilterDrawer open={filterDrawerOpen} onClose={handleFilterDrawerClose} />
+      <FilterDrawer
+        open={filterDrawerOpen}
+        onClose={handleFilterDrawerClose}
+        onStartDateChange={onStartDateChange}
+        onEndDateChange={onEndDateChange}
+      />
     </Box>
   );
 };
